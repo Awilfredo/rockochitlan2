@@ -1,6 +1,7 @@
 import { router, usePage } from '@inertiajs/react';
 import { Card } from 'flowbite-react';
 import Swal from 'sweetalert2';
+import DeleteButton from './Buttons/DeleteButton';
 
 function ProductCard({ product = null, hide= true }) {
     const user = usePage().props.auth.user;
@@ -138,25 +139,7 @@ function ProductCard({ product = null, hide= true }) {
                     </button>
 
                     {/* Delete Button */}
-                    <button
-                        className="rounded-full bg-zinc-600/80 p-2 text-white transition-colors duration-300 hover:bg-gray-600 hover:text-red-500"
-                        onClick={handleDelete}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                        </svg>
-                    </button>
+                    <DeleteButton onClick={handleDelete}></DeleteButton>
                 </div>
             ) : (
                 ''

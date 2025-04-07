@@ -13,13 +13,7 @@ function ReservationForm({event, onClick=()=>{}}) {
         reservation_date: event ? `${event.start_date}T${event.start_time}` : '',
         guest_number: '1',
         special_request: ''
-    });
-
-    useEffect(() => {
-        
-        console.log(data);
-    }, [data]);
-    
+    });    
 
     const handleSubmit = (e) => {
         e.preventDefault();

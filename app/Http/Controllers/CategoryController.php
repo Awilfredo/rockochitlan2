@@ -3,63 +3,74 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function edit()
     {
-        $categories = Category::all();
+        return Inertia::render('Categories/Edit', [
+            'categories' => Category::with('subcategories')->get()
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function updateCategory(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $category->update($request->all());
+        return back()->with('success', 'Categoría actualizada con éxito');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function storeCategory(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        Category::create($request->all());
+        return back()->with('success', 'Categoría creada con éxito');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroyCategory(Category $category)
     {
-        //
+        $category->delete();
+        return back()->with('success', 'Categoría eliminada con éxito');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function storeSubcategory(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category_id' => 'required|exists:categories,id'
+        ]);
+
+        Subcategory::create($request->all());
+        return back()->with('success', 'Subcategoría creada con éxito');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function updateSubcategory(Request $request, Subcategory $subcategory)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category_id' => 'required|exists:categories,id'
+        ]);
+
+        $subcategory->update($request->all());
+        return back()->with('success', 'Subcategoría actualizada con éxito');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroySubcategory(Subcategory $subcategory)
     {
-        //
+        $subcategory->delete();
+        return back()->with('success', 'Subcategoría eliminada con éxito');
     }
 }

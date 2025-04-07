@@ -3,16 +3,21 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import PrimaryGreenButton from '@/Components/PrimaryGreenButton';
 import ProductCard from '@/Components/ProductCard';
 import DefaultLayout from '@/Layouts/DefaultLayout';
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
-function Index({ auth, data }) {
+function Index({ data }) {
     const [selectedCategory, setSelectedCategory] = useState({});
     const [selectedSubcaregory, setSelectedSubcaregory] = useState({});
+    const user = usePage().props.auth.user;
     useEffect(() => {
-        setSelectedCategory(data[0]);
-        setSelectedSubcaregory(data[0].subcategories[0]);
-        console.log(data);
+        for (const element of data) {
+            if (element.subcategories.length > 0) {
+                setSelectedCategory(element);
+                setSelectedSubcaregory(element.subcategories[0]);
+                break;
+            }
+        }
     }, []);
 
     const handleClickCategory = (element) => {
@@ -26,19 +31,32 @@ function Index({ auth, data }) {
 
     return (
         <DefaultLayout>
-            <div className='flex w-full flex-wrap justify-center px-5'>
+            <div className="flex w-full flex-wrap justify-center px-5">
                 <div className="mb-5 grid w-full grid-cols-2 gap-4">
                     {data.map((element, index) =>
                         selectedCategory.id == element.id ? (
-                            <PrimaryButton key={index} className="w-full h-10">
-                                <div className="flex w-full justify-center">
+                            <PrimaryButton
+                                key={index}
+                                className={
+                                    'h-10 w-full ' +
+                                    (element.subcategories.length == 0
+                                        ? 'hidden'
+                                        : '')
+                                }
+                            >
+                                <div className={`flex w-full justify-center`}>
                                     {element.name}
                                 </div>
                             </PrimaryButton>
                         ) : (
                             <PrimaryBlueButton
                                 key={index}
-                                className="w-full h-10"
+                                className={
+                                    'h-10 w-full ' +
+                                    (element.subcategories.length == 0
+                                        ? 'hidden'
+                                        : '')
+                                }
                                 onClick={() => handleClickCategory(element)}
                             >
                                 <div className="flex w-full justify-center">
@@ -46,6 +64,20 @@ function Index({ auth, data }) {
                                 </div>
                             </PrimaryBlueButton>
                         ),
+                    )}
+                    {user?.roles.includes('admin') ? (
+                        <PrimaryGreenButton
+                            className="h-10 w-full"
+                            onClick={() =>
+                                router.visit(route('categories.edit'))
+                            }
+                        >
+                            <div className="flex w-full justify-center">
+                                Editar
+                            </div>
+                        </PrimaryGreenButton>
+                    ) : (
+                        ''
                     )}
                 </div>
                 <div className="mb-10 flex w-full flex-wrap gap-5">
@@ -82,13 +114,13 @@ function Index({ auth, data }) {
                             {
                                 selectedSubcaregory.products.filter(
                                     (obj) =>
-                                        auth.user?.roles.includes('admin') ||
+                                        user?.roles.includes('admin') ||
                                         obj.visible,
                                 ).length
                             }{' '}
                             productos
                         </h1>
-                        {auth.user?.roles.includes('admin') ? (
+                        {user?.roles.includes('admin') ? (
                             <div className="mb-5 flex w-full flex-wrap justify-center gap-4 px-2">
                                 <Link href={route('products.create')}>
                                     <PrimaryGreenButton>
@@ -99,19 +131,18 @@ function Index({ auth, data }) {
                         ) : (
                             ''
                         )}
-                        <div className="mb-5 flex w-full flex-wrap justify-between sm:grid sm:gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3">
+                        <div className="mb-5 flex w-full flex-wrap justify-between sm:grid sm:grid-cols-2 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-3">
                             {' '}
                             {selectedSubcaregory.products.map(
                                 (element, index) =>
-                                    auth.user?.roles.includes('admin') ||
+                                    user?.roles.includes('admin') ||
                                     element.visible ? (
                                         <ProductCard
                                             key={index}
                                             product={element}
                                             hide={
-                                                auth.user?.roles.includes(
-                                                    'admin',
-                                                ) || element.visible
+                                                user?.roles.includes('admin') ||
+                                                element.visible
                                             }
                                         ></ProductCard>
                                     ) : (

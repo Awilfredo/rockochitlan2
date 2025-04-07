@@ -33,18 +33,16 @@ class ProductController extends Controller {
     * Store a newly created resource in storage.
     */
 
-    public function store( Request $request ) {
+    public function store(Request $request) {
         try {
-            // Validación de los datos
-            $request->validate( [
+            $request->validate([
                 'name' => 'required|string|max:255',
                 'price' => 'required|numeric',
                 'stock' => 'required|integer',
                 'subcategory_id' => 'required|exists:subcategories,id',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            ] );
+                'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            ]);
 
-            // Crear el producto
             $product = new Product();
             $product->name = $request->name;
             $product->description = $request->description;
@@ -52,28 +50,22 @@ class ProductController extends Controller {
             $product->stock = $request->stock;
             $product->subcategory_id = $request->subcategory_id;
 
-            // Manejar la imagen si se ha subido
-            if ( $request->hasFile( 'image' ) ) {
-                $image = $request->file( 'image' );
-
-                // Guardar la imagen en storage/app/public/image/products
-                $imagePath = $image->storeAs( 'images/products', 'product_'. time() . '.' . $image->getClientOriginalExtension(), 'public' );
-                //$imagePath = $image->store( 'images/products', 'public' );
-                // Guardar la ruta relativa en la base de datos
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imagePath = $image->storeAs(
+                    'images/products',
+                    'product_' . time() . '.' . $image->getClientOriginalExtension(),
+                    'public'
+                );
                 $product->image = $imagePath;
             }
 
-            // Guardar el producto en la base de datos
             $product->save();
 
-            // Responder con el producto guardado
-            return back()->with( 'success', 'Producto creado exitosamente' );
+            return back()->with('success', 'Producto creado exitosamente');
 
-        } catch ( \Exception $e ) {
-            // Registrar el error en el archivo de logs
-            //\Log::error( 'Error al guardar el producto: ' . $e->getMessage() );
-            // Responder con un mensaje de error
-            return back()->with( 'error', 'Error al guardar el producto' );
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al guardar el producto: ' . $e->getMessage());
         }
     }
 

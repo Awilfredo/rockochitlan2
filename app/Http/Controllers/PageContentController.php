@@ -24,7 +24,7 @@ class PageContentController extends Controller {
             'content' => $request->input( 'content' ),
         ] );
 
-        return redirect()->route( 'page-contents.index' )->with( 'success', 'Contenido actualizado correctamente.' );
+        return redirect()->route( 'home' );
     }
 }
 

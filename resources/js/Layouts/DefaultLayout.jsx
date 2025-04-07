@@ -10,6 +10,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { Footer } from 'flowbite-react';
 import { useRef, useState } from 'react';
 import {
+    BsBriefcaseFill,
     BsDribbble,
     BsFacebook,
     BsGithub,
@@ -335,17 +336,18 @@ function DefaultLayout({ children }) {
                                             className="flex-wrap justify-center gap-4"
                                         >
                                             <Footer.Link
-                                                icon={BsWhatsapp}
-                                                href="#"
+                                          
+                                                href="https://wa.me/72836378"
+                                                target='blank'
                                             >
                                                 <BsWhatsapp className="mx-auto mb-2 h-8 w-8 text-green-500" />
                                                 WhatsApp
                                             </Footer.Link>
-                                            <Footer.Link href="#">
+                                            <Footer.Link href="https://www.instagram.com/rockochitlan_grill_music?igsh=MWI5bmV2a2hoM2EzMQ==" target='blank'>
                                                 <BsInstagram className="mx-auto mb-2 h-8 w-8 text-purple-700" />
                                                 Instagram
                                             </Footer.Link>
-                                            <Footer.Link href="#">
+                                            <Footer.Link href="https://www.facebook.com/share/16L6EHY6na/ " target='blank'>
                                                 <BsFacebook className="mx-auto mb-2 h-8 w-8 text-blue-600" />
                                                 Facebook
                                             </Footer.Link>
@@ -394,21 +396,23 @@ function DefaultLayout({ children }) {
                                     />
                                     <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
                                         <Footer.Icon
-                                            href="#"
+                                            href="https://www.facebook.com/share/1FoUUNRr38/"
                                             icon={BsFacebook}
                                         />
                                         <Footer.Icon
-                                            href="#"
+                                            href="https://www.instagram.com/w1lfredo0_0?utm_source=qr&igsh=MWVhczdicmlsN20yeA=="
+                                            target='blank'
                                             icon={BsInstagram}
                                         />
-                                        <Footer.Icon
+                                        {/* <Footer.Icon
                                             href="#"
                                             icon={BsTwitter}
-                                        />
-                                        <Footer.Icon href="#" icon={BsGithub} />
+                                        /> */}
+                                        <Footer.Icon href="https://github.com/Awilfredo" target='blank' icon={BsGithub} />
                                         <Footer.Icon
-                                            href="#"
-                                            icon={BsDribbble}
+                                            href="https://awilfredo.github.io/portafolio/"
+                                            target='blank'
+                                            icon={BsBriefcaseFill}
                                         />
                                     </div>
                                 </div>

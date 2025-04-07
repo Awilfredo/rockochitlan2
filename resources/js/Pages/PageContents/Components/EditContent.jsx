@@ -3,21 +3,8 @@ import { useForm } from "@inertiajs/react";
 import { useState } from "react";
 import PrimaryButton from "@/Components/PrimaryButton";
 
-function EditContent({ show, onClose, contentKey, initialContent }) {
-    const { data, setData, patch, processing, errors } = useForm({
-        key: contentKey,
-        content: initialContent || '',
-    });
+function EditContent({ show, onClose, data, setData, onSubmit, errors, processing  }) {
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        patch(route('page-contents.update', contentKey), {
-            preserveScroll: true,
-            onSuccess: () => {
-                onClose();
-            },
-        });
-    };
 
     return (
         <Modal show={show} onClose={onClose} closeable={true}>
@@ -26,7 +13,7 @@ function EditContent({ show, onClose, contentKey, initialContent }) {
                     Editar Contenido
                 </h2>
 
-                <form onSubmit={handleSubmit} className="mt-6">
+                <form onSubmit={onSubmit} className="mt-6">
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
                             Contenido

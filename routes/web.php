@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LikeController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SubcategoryController;
 use App\Models\Event;
+use App\Models\Image;
 use App\Models\PageContent;
 use App\Models\Product;
 use App\Models\Reservation;
@@ -21,6 +24,7 @@ Route::get('/', function () {
     $lastProducts = Product::latest()->take(4)->get(); // Obtener los últimos 4 productos
     $events = Event::where('end_date', '>=', now())->take(3)->get(); // Obtener los próximos 3 eventos
     $pageContents = PageContent::all();
+    $banners = Image::where('section', 'banner')->get();
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -30,6 +34,7 @@ Route::get('/', function () {
         'events' => $events,
         'products' => $lastProducts,
         'pageContents' => $pageContents,
+        'banners' => $banners,
     ]);
 })->name('home');
 
@@ -64,15 +69,24 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/reservations/{reservation}/reject', [ReservationController::class, 'reject'])->name('reservations.reject');
     Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
     //images
-    Route::get('/images', [ImageController::class, 'index'])->name('images.index');
     Route::get('/images/create', [ImageController::class, 'create'])->name('images.create');
-    Route::get('/images/{image}', [ImageController::class, 'show'])->name('images.show');
     Route::post('/images', [ImageController::class, 'store'])->name('images.store');
+    Route::get('/images', [ImageController::class, 'index'])->name('images.index');
+    Route::get('/images/{image}', [ImageController::class, 'show'])->name('images.show');
     Route::delete('/images/{image}', [ImageController::class, 'destroy'])->name('images.destroy'); 
     //page_contents
     Route::get('/page-contents', [PageContentController::class, 'index'])->name('page-contents.index');
     Route::get('/page-contents/{pageContent}/edit', [PageContentController::class, 'edit'])->name('page-contents.edit');
     Route::put('/page-contents/{pageContent}', [PageContentController::class, 'update'])->name('page-contents.update');
+
+    Route::get('/categories/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::post('/categories', [CategoryController::class, 'storeCategory'])->name('categories.store');
+    Route::put('/categories/{category}', [CategoryController::class, 'updateCategory'])->name('categories.update');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroyCategory'])->name('categories.destroy');
+    
+    Route::post('/subcategories', [CategoryController::class, 'storeSubcategory'])->name('subcategories.store');
+    Route::put('/subcategories/{subcategory}', [CategoryController::class, 'updateSubcategory'])->name('subcategories.update');
+    Route::delete('/subcategories/{subcategory}', [CategoryController::class, 'destroySubcategory'])->name('subcategories.destroy');
 
 });
 

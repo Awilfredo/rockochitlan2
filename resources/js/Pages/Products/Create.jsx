@@ -53,7 +53,7 @@ function Create({ categories }){
         if (!image) {
             Swal.fire({
                 title: "Alerta!",
-                text: "No has seleccionado una imagen o no has guardado los cambios de la edición, ¿deseas guardar el producto sin una imagen?",
+                text: "No has seleccionado una imagen o no has guardado los cambios de la edicion, deseas guardar el producto sin una imagen?",
                 icon: "warning",
                 cancelButtonText: "Cancelar",
                 confirmButtonText: "Aceptar",
@@ -61,15 +61,15 @@ function Create({ categories }){
                 showCancelButton: true,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    sendData();
+                    sendData(data);
                 }
             }); 
         }else{
-            sendData();
+            sendData(data);
         }
     };
 
-    const sendData = (e) => {
+    const sendData = (data) => {
         router.post(route("products.store"), data, {
             forceFormData: true,
             onSuccess: () => {
