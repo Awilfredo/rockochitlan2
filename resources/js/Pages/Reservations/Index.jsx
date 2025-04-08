@@ -171,7 +171,7 @@ const Index = ({ reservations }) => {
         <DefaultLayout>
             <Head title="Reservaciones" />
 
-            <div className="w-full p-5">
+            <div className="w-full p-5  flex flex-wrap">
                 <div className="mb-6 flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-gray-800">
                         Lista de Reservaciones

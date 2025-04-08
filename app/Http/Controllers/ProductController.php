@@ -91,61 +91,43 @@ class ProductController extends Controller {
         ] );
     }
 
-    public function update( Request $request, Product $product ) {
+    public function update(Request $request, Product $product) {
         try {
-            $request->validate( [
+            $request->validate([
                 'name' => 'required|string|max:255',
                 'price' => 'required|numeric',
                 'stock' => 'required|integer',
                 'subcategory_id' => 'required|exists:subcategories,id',
-                'image' => 'nullable',
-            ] );
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            ]);
 
-            $product->name = $request->name;
-            $product->description = $request->description;
-            $product->price = $request->price;
-            $product->stock = $request->stock;
-            $product->subcategory_id = $request->subcategory_id;
-            $product->visible = $request->visible;
+            $product->fill($request->only([
+                'name',
+                'description',
+                'price',
+                'stock',
+                'subcategory_id',
+                'visible',
+            ]));
 
             // Handle image update
-            if ( $request->hasFile( 'image' ) ) {
-                // Delete old image
-                if ( $product->image ) {
-                    Storage::disk( 'public' )->delete( $product->image );
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                if ($product->image) {
+                    Storage::disk('public')->delete($product->image);
                 }
 
-                $image = $request->file( 'image' );
-                $imagePath = $image->storeAs(
-                    'images/products',
-                    'product_' . time() . '.' . $image->getClientOriginalExtension(),
-                    'public'
-                );
-                $product->image = $imagePath;
-            } else if ( $request->image && is_string( $request->image ) && str_starts_with( $request->image, 'data:image' ) ) {
-                // Handle base64 image
-                if ( $product->image ) {
-                    Storage::disk( 'public' )->delete( $product->image );
-                }
-
-                $base64Image = explode( ';base64,', $request->image );
-                $imageType = explode( 'image/', $base64Image[ 0 ] )[ 1 ];
-                $imageData = base64_decode( $base64Image[ 1 ] );
-
-                $imageName = 'product_' . time() . '.' . $imageType;
-                $imagePath = 'images/products/' . $imageName;
-
-                Storage::disk( 'public' )->put( $imagePath, $imageData );
+                // Store new image
+                $imagePath = $request->file('image')->store('images/products', 'public');
                 $product->image = $imagePath;
             }
 
             $product->save();
 
-            return redirect()->route( 'products' )->with( 'success', 'Producto actualizado exitosamente' );
+            return redirect()->route('products.index')->with('success', 'Producto actualizado exitosamente');
 
-        } catch ( \Exception $e ) {
-            return redirect()->back()
-            ->with( 'error', 'Error al actualizar el producto: ' . $e->getMessage() );
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al actualizar el producto: ' . $e->getMessage());
         }
     }
 

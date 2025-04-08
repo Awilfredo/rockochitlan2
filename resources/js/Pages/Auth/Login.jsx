@@ -1,3 +1,4 @@
+import AppLogo from '@/Components/Icons/AppLogo';
 import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
@@ -24,6 +25,9 @@ export default function Login({ status, canResetPassword }) {
             <Head title="Log in" />
             <div className="w-full max-w-md space-y-8 rounded-lg bg-white/10 backdrop-blur-sm p-8 shadow-2xl border border-gray-700">
                 <div>
+                    <Link href={route('home')} className="flex justify-center">
+                        <AppLogo className="h-16 w-16 text-white hover:text-blue-400 transition-colors duration-200" />
+                    </Link>
                     <h2 className="mt-6 text-center text-3xl font-bold text-white">
                         Iniciar Sesión
                     </h2>

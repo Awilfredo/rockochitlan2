@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
         $adminUser = User::create([
             'name' => 'Admin User',
             'email' => 'admin@rockochitlan.com',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('ObiJuanKenobi94*'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
         ]);
@@ -36,16 +36,16 @@ class UserSeeder extends Seeder
         // Asignar permisos al rol de admin
         $adminRole->givePermissionTo($viewPermission, $editPermission);
 
-        // Crear un usuario normal
-        $normalUser = User::create([
-            'name' => 'Normal User',
-            'email' => 'user@rockochitlan.com',
-            'password' => Hash::make('password123'),
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-        ]);
+        // // Crear un usuario normal
+        // $normalUser = User::create([
+        //     'name' => 'Normal User',
+        //     'email' => 'user@rockochitlan.com',
+        //     'password' => Hash::make('password123'),
+        //     'email_verified_at' => now(),
+        //     'remember_token' => Str::random(10),
+        // ]);
 
-        // Asignar el rol de user al usuario normal
-        $normalUser->assignRole($userRole);
+        // // Asignar el rol de user al usuario normal
+        // $normalUser->assignRole($userRole);
     }
 }

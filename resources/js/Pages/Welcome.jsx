@@ -2,6 +2,7 @@ import EditButton from '@/Components/EditButton';
 import MapLocation from '@/Components/MapLocation';
 import PrimaryButton from '@/Components/PrimaryButton';
 import ProductCard from '@/Components/ProductCard';
+import PromotionCard from '@/Components/PromotionCard';
 import ReservationForm from '@/Components/ReservationForm';
 import Section from '@/Components/Section';
 import DefaultLayout from '@/Layouts/DefaultLayout';
@@ -19,6 +20,7 @@ export default function Welcome({
     products,
     pageContents,
     banners,
+    promotions,
 }) {
     const user = usePage().props.auth.user;
     const [showEditContenModal, setShowEditContenModal] = useState(false);
@@ -195,6 +197,31 @@ export default function Welcome({
                     <PrimaryButton>Reservar Mesa</PrimaryButton>
                 </div>
             </Section>
+            {
+                promotions?.length ? 
+            <Section>
+                <div className="title mb-5 w-full pt-28 text-center text-3xl font-semibold">
+                    Promociones
+                </div>
+                <div className="flex w-full flex-wrap justify-center md:grid md:grid-cols-2 xl:grid-cols-3">
+                    {promotions?.map((promotion, index) => (
+                        <PromotionCard
+                            key={index}
+                            promotion={promotion}
+                        ></PromotionCard>
+                    ))}
+                </div>
+                <div className="mt-5 flex w-full justify-center">
+                    <Link
+                        href={route('promotions.index')}
+                        className="mx-2 my-2 rounded bg-indigo-700 px-6 py-2 text-xs text-white transition duration-150 ease-in-out hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+                    >
+                        Ver más...
+                    </Link>
+                </div>
+            </Section> : ''}
+
+            {/* Featured Products */}
             {featured.length ? (
                 <Section>
                     <h2 className="mb-5 w-full text-center text-3xl">

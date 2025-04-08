@@ -32,6 +32,9 @@ function Index({ data }) {
     return (
         <DefaultLayout>
             <div className="flex w-full flex-wrap justify-center px-5">
+                {
+                    data.length === 0 ? <h1>No hay categorias creadas</h1>:''
+                }
                 <div className="mb-5 grid w-full grid-cols-2 gap-4">
                     {data.map((element, index) =>
                         selectedCategory.id == element.id ? (
@@ -106,9 +109,8 @@ function Index({ data }) {
                         : ''}
                 </div>
 
-                {selectedSubcaregory?.id ? (
-                    <div>
-                        {' '}
+                <div>
+                    {selectedSubcaregory?.id ? (
                         <h1 className="mb-5 mt-10 w-full text-center text-xl">
                             Se han encontrado{' '}
                             {
@@ -120,40 +122,39 @@ function Index({ data }) {
                             }{' '}
                             productos
                         </h1>
-                        {user?.roles.includes('admin') ? (
-                            <div className="mb-5 flex w-full flex-wrap justify-center gap-4 px-2">
-                                <Link href={route('products.create')}>
-                                    <PrimaryGreenButton>
-                                        Crear Nuevo elemento
-                                    </PrimaryGreenButton>
-                                </Link>
-                            </div>
-                        ) : (
-                            ''
-                        )}
-                        <div className="mb-5 flex w-full flex-wrap justify-between sm:grid sm:grid-cols-2 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-3">
-                            {' '}
-                            {selectedSubcaregory.products.map(
-                                (element, index) =>
-                                    user?.roles.includes('admin') ||
-                                    element.visible ? (
-                                        <ProductCard
-                                            key={index}
-                                            product={element}
-                                            hide={
-                                                user?.roles.includes('admin') ||
-                                                element.visible
-                                            }
-                                        ></ProductCard>
-                                    ) : (
-                                        ''
-                                    ),
-                            )}
+                    ) : (
+                        <h1 className='mb-5'>No se han encontrado productos</h1>
+                    )}
+
+                    {user?.roles.includes('admin') ? (
+                        <div className="mb-5 flex w-full flex-wrap justify-center gap-4 px-2">
+                            <Link href={route('products.create')}>
+                                <PrimaryGreenButton>
+                                    Crear Nuevo elemento
+                                </PrimaryGreenButton>
+                            </Link>
                         </div>
+                    ) : (
+                        ''
+                    )}
+                    <div className="mb-5 flex w-full flex-wrap justify-between sm:grid sm:grid-cols-2 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-3">
+                        {' '}
+                        {selectedSubcaregory?.products?.map((element, index) =>
+                            user?.roles.includes('admin') || element.visible ? (
+                                <ProductCard
+                                    key={index}
+                                    product={element}
+                                    hide={
+                                        user?.roles.includes('admin') ||
+                                        element.visible
+                                    }
+                                ></ProductCard>
+                            ) : (
+                                ''
+                            ),
+                        )}
                     </div>
-                ) : (
-                    ''
-                )}
+                </div>
             </div>
         </DefaultLayout>
     );

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade'); // Relación con el producto
             $table->string('title'); // Título de la promoción
             $table->text('description')->nullable(); // Descripción de la promoción
-            $table->decimal('discount_percentage', 5, 2); // Porcentaje de descuento
+            $table->decimal('discount', 5, 2); // Porcentaje de descuento
             $table->date('start_date'); // Fecha de inicio
             $table->date('end_date'); // Fecha de finalización
             $table->timestamps(); // Timestamps para created_at y updated_a

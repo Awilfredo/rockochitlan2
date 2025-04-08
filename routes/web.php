@@ -7,12 +7,14 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PageContentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SubcategoryController;
 use App\Models\Event;
 use App\Models\Image;
 use App\Models\PageContent;
 use App\Models\Product;
+use App\Models\Promotion;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Application;
@@ -25,6 +27,7 @@ Route::get('/', function () {
     $events = Event::where('end_date', '>=', now())->take(3)->get(); // Obtener los próximos 3 eventos
     $pageContents = PageContent::all();
     $banners = Image::where('section', 'banner')->get();
+    $promotions = Promotion::with('product')->where('end_date', '>=', now())->take(3)->get(); // Obtener las próximas 3 promociones
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -35,6 +38,7 @@ Route::get('/', function () {
         'products' => $lastProducts,
         'pageContents' => $pageContents,
         'banners' => $banners,
+        'promotions' => $promotions,
     ]);
 })->name('home');
 
@@ -48,13 +52,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         //return Inertia::render('Dashboard');
     })->name('dashboard');
     // Products
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update'); 
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/{product}/feature', [ProductController::class, 'feature'])->name('products.feature');
     Route::put('/products/{product}/hide', [ProductController::class, 'hide'])->name('products.hide');
-    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update'); 
-    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     // Events
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
@@ -88,9 +92,20 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/subcategories/{subcategory}', [CategoryController::class, 'updateSubcategory'])->name('subcategories.update');
     Route::delete('/subcategories/{subcategory}', [CategoryController::class, 'destroySubcategory'])->name('subcategories.destroy');
 
+    //promotions
+    Route::get('/promotions/create', [PromotionController::class, 'create'])->name('promotions.create');
+    Route::post('/promotions', [PromotionController::class, 'store'])->name('promotions.store');
+    Route::get('/promotions/{promotion}/edit', [PromotionController::class, 'edit'])->name('promotions.edit');
+    Route::put('/promotions/{promotion}', [PromotionController::class, 'update'])->name('promotions.update');
+    Route::delete('/promotions/{promotion}', [PromotionController::class, 'destroy'])->name('promotions.destroy');
+    
+    
+    
 });
 
 
+Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions.index');
+Route::get('/promotions/{promotion}', [PromotionController::class,'show'])->name('promotions.show');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/events', [EventController::class, 'index'])->name('events.index');

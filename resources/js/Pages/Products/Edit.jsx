@@ -31,22 +31,40 @@ const Edit = ({ product, categories }) => {
         const data = new FormData();
         
         // Add form data
-        Object.keys(formData).forEach(key => {
+        for (const key in formData) {
             data.append(key, formData[key]);
-        });
+        }
 
         // Add image if exists
         if (image && image.blob) {
-            data.append("image", image.blob, "product-image.webp");
+            data.append("image", image.blob, "cropped-image.webp");
         }
 
-        // Log FormData contents for debugging
-        for (let pair of data.entries()) {
-            console.log(pair[0], pair[1]);
+        // Confirm if no new image is selected
+        if (!image) {
+            Swal.fire({
+                title: "¿Continuar?",
+                text: "No has seleccionado una nueva imagen. ¿Deseas mantener la imagen actual?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Sí, continuar",
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#3B82F6",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendUpdateRequest(data);
+                }
+            });
+        } else {
+            sendUpdateRequest(data);
         }
+    };
 
-        router.post(route("product.update", product.id), data, {
+    const sendUpdateRequest = (data) => {
+        router.post(route("products.update", product.id), {
             _method: 'PUT',
+            ...Object.fromEntries(data),
+        }, {
             forceFormData: true,
             onSuccess: () => {
                 Swal.fire({
